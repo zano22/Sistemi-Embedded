@@ -9,8 +9,8 @@ sbit Led = P1^6;
 unsigned long int timer;
 sfr16 RCAP2  = 0xCA;            // Timer2 capture/reload
 sfr16 T2     = 0xCC;            // Timer2
-sfr16 RCAP4  = 0xCA;            // Timer4 capture/reload
-sfr16 T4     = 0xCC;            // Timer4
+sfr16 RCAP4  = 0xE4;            // Timer4 capture/reload
+sfr16 T4     = 0xF4;            // Timer4
 sbit Over = T2CON^7;
 int stato;	//stato = 0 -> stato A			stato = 1 -> stato B
 int click;	//click = 0 -> primo click	click = 1 -> secondo click
@@ -40,7 +40,6 @@ void init (void) {
 
 //parte 4
 void init_timer2(unsigned int counts){ //timer lampeggio led
-	//CKCON = 0x00;	// Define clock (T2M). Timer 2			// uses system clock DIV BY 12
 	T2CON = 0x00;
 	RCAP2 = counts;	// Init reload values in the Capture registers
 	T2 = 0xFFFF;      // count register set to reload immediately when the first clock occurs
@@ -63,11 +62,10 @@ void timer2_ISR(void) interrupt 5{ //lampeggio com periodo 1s
 }
 
 void init_timer4_200(unsigned int counts){ //timer scadenza doppio click
-	//CKCON = 0x00;	// Define clock (T2M). Timer 4			// uses system clock DIV BY 12
 	T4CON = 0x00;
 	RCAP4 = counts;	// Init reload values in the Capture registers
-	T4 = 0xFFFF;      // count register set to reload immediately when the first clock occurs
-	IE |= 0x20;     	// IE.5, Enable Timer 4 interrupts (ET2)
+	T4 = 0x0000;      // count register set to reload immediately when the first clock occurs
+	EIE2 |= 0x04;     	// EIE2.2 Enable Timer 4 interrupts (ET4)
 	T4CON |= 0x04; 
 }
 
@@ -88,8 +86,9 @@ void interrupt_double(void) interrupt 19{ //interrupt per click bottone
 	if(click==0){
 		click = 1;
 		//aspetto 200ms
-		init_timer4_200(45000); //45000 messo per prova
+		init_timer4_200(9500);
 	} else {
+		click=0;
 		//se doppio click
 		T4CON &= ~(0x04); //stop timer doppio click
 		if(stato==0){ //cambio stato
@@ -100,7 +99,6 @@ void interrupt_double(void) interrupt 19{ //interrupt per click bottone
 			init_timer2(23334); //lampeggia led - stato A
 			timer=0;
 		}
-		click=0;
 	}
 	//altrimenti nulla
 }
