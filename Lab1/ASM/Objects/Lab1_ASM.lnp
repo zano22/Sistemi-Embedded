@@ -1,3 +1,0 @@
-".\Objects\GPIO_ASM.obj" 
-TO ".\Objects\Lab1_ASM" 
-PRINT(".\Listings\Lab1_ASM.m51") RAMSIZE(256) 
