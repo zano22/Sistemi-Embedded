@@ -8,7 +8,7 @@
 #define SMB_MTADDACK 0x18 // (MT) Slave address + W transmitted
 #define SMB_MTDBACK 0x28 // (MT) data byte transmitted
 #define SMB_MRADDACK 0x40 // (MR) Slave address + R transmitted;
-#define SMB_MRDBACK 0x50 // (MR) data byte recívd; ACK transmitted
+#define SMB_MRDBACK 0x50 // (MR) data byte rec‚Äôvd; ACK transmitted
 
 // indirizzi I2C_SMBus
 #define LCD 0x3E
@@ -188,7 +188,8 @@ void leggi_inclinazione(void){
 	
 	i[0] = ANG[i[0] & 0x3F];
 	i[1] = ANG[i[1] & 0x3F];
-	i[2] = 90 - ANG[i[2] & 0x3F];
+	//i[2] = 90 - ANG[i[2] & 0x3F];
+	i[2] = ANG[i[2] & 0x3F];
 	
 	/*i[0] &= 0x3F;
 	i[1] &= 0x3F;
@@ -199,13 +200,13 @@ void leggi_inclinazione(void){
 	i[2] = 90 - ANG[i[2]];*/
 	
 	a[0] = 48 + (i[0]/10); //decine
-	a[1] = 48 + (i[0]%10); //unit‡
+	a[1] = 48 + (i[0]%10); //unit√†
 	a[2] = 0;
 	a[3] = 48 + (i[1]/10); //decine
-	a[4] = 48 + (i[1]%10); //unit‡
+	a[4] = 48 + (i[1]%10); //unit√†
 	a[5] = 0;
 	a[6] = 48 + (i[2]/10); //decine
-	a[7] = 48 + (i[2]%10); //unit‡
+	a[7] = 48 + (i[2]%10); //unit√†
 	a[8] = 0;
 	
 	// lcd 00 0x12  per andare a capo
